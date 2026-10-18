@@ -15,5 +15,18 @@ services:
       timeout: 3s
       retries: 3
 
+  static-data-service:
+    build:
+      context: .
+      dockerfile: static-data-service/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      # inside Docker the DB is reached by service name and its internal port
+      SPRING_DATASOURCE_URL: jdbc:postgresql://static-data-db:5432/staticdb
+    depends_on:
+      static-data-db:
+        condition: service_healthy
+
 volumes:
   static-data-db:
